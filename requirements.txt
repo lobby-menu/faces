@@ -1,0 +1,3 @@
+Flask==0.12.0
+# No need to install it, since its already present in the docker image.
+# openface==0.2.1
