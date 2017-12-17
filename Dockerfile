@@ -11,7 +11,7 @@ USER lobby
 WORKDIR /home/lobby/app
 ADD . .
 
-RUN pip2 install --user --ignore-installed -r requirements.txt
+RUN pip install --ignore-installed -r requirements.txt
 
 ENTRYPOINT ["python", "/home/lobby/app/faces.py"]
 

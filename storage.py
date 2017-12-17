@@ -57,4 +57,5 @@ class FaceStorage:
         return { 'name': filename }
 
     def get_user_acessible_url_for_image(self, metadata):
-        return urlparse.urljoin(self.host, self.upload_path, urlencode(metadata['name']))
+        upload_url = urlparse.urljoin(self.host, self.upload_path)
+        return urlparse.urljoin(upload_url + '/', metadata['name'])

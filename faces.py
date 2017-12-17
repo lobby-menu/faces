@@ -5,17 +5,8 @@ from operations import FaceOperations
 from database import FaceDatabase
 from storage import FaceStorage
 from uuid import uuid4
-from image_utils import readRGBImage, snapRectangle, rgbToPNGBytes
-
-app = Flask(__name__, static_url_path='/')
-
-@app.route('/uploads/<path:path>')
-def send_files(path):
-    return app.send_static_file(os.path.join('uploads', path))
-
-faceOps = FaceOperations(**options.get('face', {}))
-database = FaceDatabase(**options.get('database', {}))
-storage = FaceStorage(**options.get('storage', {}))
+from routes.faces_create import faces_create
+from routes.faces_get import faces_get
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -32,6 +23,17 @@ class InvalidUsage(Exception):
         rv['message'] = self.message
         return rv
 
+
+app = Flask(__name__, static_url_path='/')
+
+@app.route('/uploads/<path:path>')
+def send_files(path):
+    return app.send_static_file(os.path.join('uploads', path))
+
+faceOps = FaceOperations(**options.get('face', {}))
+database = FaceDatabase(**options.get('database', {}))
+storage = FaceStorage(**options.get('storage', {}))
+
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
@@ -42,33 +44,33 @@ def handle_invalid_usage(error):
 def hello_world():
     return 'Hello World!'
 
+def getFileExtension(file):
+    split = file.rsplit('.', 1)
+    return None if len(split) < 2 else split[1].lower()
+
 @app.route('/faces/create', methods=['POST'])
-def faces_create():
-    # TODO: make sure its or jpeg.
+def faces_create_route():
     imageFile = request.files['image']
     if imageFile is None:
         raise InvalidUsage("No image is sent with the request.")
 
-    temp_path = "/tmp/" + str(uuid4()) + ".png"
+    extension = getFileExtension(imageFile.filename)
+    if extension not in ["png", "jpeg", "jpg"]:
+        raise InvalidUsage("Expected to find png, jpeg or jpg file.")
+
+    temp_path = "/tmp/" + str(uuid4()) + "." + extension
     imageFile.save(temp_path)
-    # TODO: Save the original photo with the face information?
-    original_meta = storage.upload_original_image(temp_path, True)
-    original_meta['faces'] = []
-    originalImageRGB = readRGBImage(temp_path)
 
-    faces = faceOps.find_faces(originalImageRGB)
-    for rect in faces:
-        faceImage = snapRectangle(originalImageRGB, rect)
-        alignedFace = faceOps.align(faceImage)
-        reps = faceOps.extract(alignedFace)
+    return jsonify(faces_create(storage, faceOps, database, temp_path))
 
-        face_meta = storage.write_face_image(rgbToPNGBytes(alignedFace))
-        original_meta['faces'].append(face_meta)
-        # TODO: save reps and face_meta
-        print(database.insert_face_with_represehtation(list(reps), face_meta))
+@app.route('/faces/<face_id>')
+def faces_get_route(face_id):
+    result = faces_get(storage, database, face_id)
+    if result is None:
+        # TODO: this should be not found. make sure the errors are returned as json.
+        raise InvalidUsage("Wrong id number.")
+    return jsonify(result)
 
-    return jsonify(original_meta)
 
 if __name__ == '__main__':
-
     app.run(host="0.0.0.0")
