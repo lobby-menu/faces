@@ -8,6 +8,8 @@ from uuid import uuid4
 from routes.faces_create import faces_create
 from routes.faces_get import faces_get
 from routes.faces_relation import faces_relation
+from routes.original_get import original_get
+from routes.person_get import person_get
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -67,6 +69,22 @@ def faces_create_route():
 @app.route('/faces/<face_id>', methods=['GET'])
 def faces_get_route(face_id):
     result = faces_get(storage, database, face_id)
+    if result is None:
+        # TODO: this should be not found. make sure the errors are returned as json.
+        raise InvalidUsage("Wrong id number.")
+    return jsonify(result)
+
+@app.route('/originals/<original_id>', methods=['GET'])
+def originals_get_route(original_id):
+    result = original_get(storage, database, original_id)
+    if result is None:
+        # TODO: this should be not found. make sure the errors are returned as json.
+        raise InvalidUsage("Wrong id number.")
+    return jsonify(result)
+
+@app.route('/person/<person_id>', methods=['GET'])
+def person_get_route(person_id):
+    result = person_get(storage, database, person_id)
     if result is None:
         # TODO: this should be not found. make sure the errors are returned as json.
         raise InvalidUsage("Wrong id number.")

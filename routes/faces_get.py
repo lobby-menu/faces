@@ -1,9 +1,4 @@
-def faces_get(storage, database, id):
-    meta = database.get_face_metadata(id)
-
-    if meta is None:
-        return meta
-
+def mapFaceResultToObj(storage, id, meta):
     accessible_url = storage.get_user_acessible_url_for_image(meta.get('metadata', {}))
     extra = meta.get('extra', {})
     original = meta.get('original', "")
@@ -17,3 +12,10 @@ def faces_get(storage, database, id):
         'extra': extra
     }
 
+def faces_get(storage, database, id):
+    meta = database.get_face_metadata(id)
+
+    if meta is None:
+        return meta
+
+    return mapFaceResultToObj(storage, id, meta)

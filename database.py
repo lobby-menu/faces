@@ -20,6 +20,16 @@ class FaceDatabase:
     def __set_faces_person(self, face_ids, person_id):
         return self.faces.update_many({ '_id': { '$in': face_ids }}, { '$set': { 'person': person_id }})
 
+    def get_original(self, id):
+        return self.originals.find_one({ "_id": ObjectId(id) })
+
+    def get_person(self, id):
+        return self.people.find_one({ "_id": ObjectId(id) })
+
+    def get_faces(self, face_ids):
+        faces = convertToIdArray(face_ids)
+        return self.faces.find({ "_id": { "$in": faces }})
+
     def set_faces_for_original(self, original_id, face_ids):
         faces = convertToIdArray(face_ids)
         return self.originals.update_one({ "_id": ObjectId(original_id) }, { '$set': { 'faces': faces }})
@@ -69,14 +79,6 @@ class FaceDatabase:
             return { 'ok': False, 'reason': "Couldn't set person on faces." }
 
         return { 'ok': True, 'person': str(person_id) }
-
-    def get_faces_with_meta_for_person(self, person_id):
-        """
-        Given a person, get each face for that person and the metadata for that faces.
-        :param person_id: the person to retrieve faces for.
-        :return:
-        """
-        self.people.find({ '_id': ObjectId(person_id) })
 
     def add_relation(self, person_id, face_ids, clean_previous=False):
         """
