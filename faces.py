@@ -7,6 +7,7 @@ from storage import FaceStorage
 from uuid import uuid4
 from routes.faces_create import faces_create
 from routes.faces_get import faces_get
+from routes.faces_relation import faces_relation
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -63,13 +64,23 @@ def faces_create_route():
 
     return jsonify(faces_create(storage, faceOps, database, temp_path))
 
-@app.route('/faces/<face_id>')
+@app.route('/faces/<face_id>', methods=['GET'])
 def faces_get_route(face_id):
     result = faces_get(storage, database, face_id)
     if result is None:
         # TODO: this should be not found. make sure the errors are returned as json.
         raise InvalidUsage("Wrong id number.")
     return jsonify(result)
+
+@app.route('/faces/relation', methods=['POST'])
+def faces_relation_route():
+    data = request.get_json()
+    if data is None or 'faces' not in data:
+        raise InvalidUsage("This endpoint requires data in json format to be posted. With faces key.")
+    faces = data.get('faces', [])
+    person = data.get('person', None)
+
+    return jsonify(faces_relation(database, faces, person))
 
 
 if __name__ == '__main__':

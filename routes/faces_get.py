@@ -6,12 +6,14 @@ def faces_get(storage, database, id):
 
     accessible_url = storage.get_user_acessible_url_for_image(meta.get('metadata', {}))
     extra = meta.get('extra', {})
+    original = meta.get('original', "")
     creation_date = meta.get('creation_date', None)
 
     return {
         'id': id,
         'accessible_url': accessible_url,
         'creation_data': creation_date,
+        'original': str(original),
         'extra': extra
     }
 

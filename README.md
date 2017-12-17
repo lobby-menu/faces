@@ -23,7 +23,7 @@ Returns metadata about the face like its create date, and images of its aligned 
 Groups the given faces into what it thinks are different persons, and returns a list of top persons it thinks each groups belong to.
 
 ### POST /faces/relation
-For a list of faces, creates a relation to a specific person.
+For a list of faces, creates a relation to a specific person or creates a new person.
 
 ### GET /person/{id}
-For a given user, return the related face ids, and metadata information about the faces.
+For a given person, return the related face ids, and metadata information about the faces.
