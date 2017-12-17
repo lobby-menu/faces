@@ -10,7 +10,6 @@ import openface
 def map_rectangle_to_tuple(rect):
     if rect is None:
         return None
-    print(rect.bottom())
     return ((rect.left(), rect.top()), (rect.width(), rect.height()))
 
 class FaceOperations:

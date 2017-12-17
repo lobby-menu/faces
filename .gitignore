@@ -175,3 +175,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+## Ignore uploaded faces.
+static/uploads/**

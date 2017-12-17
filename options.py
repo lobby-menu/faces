@@ -3,6 +3,10 @@ options = {
     'database': {
         'connection_string': 'mongodb://172.17.0.1:27017'
     },
+    'storage': {
+        'path': 'uploads',
+        'host': 'http://localhost:8080'
+    },
     'face': {
         'model_directory': '/root/openface/models',
         'prefered_img_dim': imgDim,

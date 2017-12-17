@@ -9,6 +9,11 @@ def readRGBImage(imgPath):
     bgrImg = cv2.imread(imgPath)
     return None if bgrImg is None else cv2.cvtColor(bgrImg, cv2.COLOR_BGR2RGB)
 
+def rgbToPNGBytes(rgbImage):
+    image = cv2.cvtColor(rgbImage, cv2.COLOR_RGB2BGR)
+    result, buf = cv2.imencode(".png", image)
+    return bytearray(buf)
+
 def snapRectangle(img, rect):
     """
     Given a image and a rectangle, returns only the rectangle part of that image.
