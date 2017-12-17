@@ -1,7 +1,7 @@
 from options import options
 from flask import Flask
-from face_operations import FaceOperations
-from face_database import FaceDatabase
+from operations import FaceOperations
+from database import FaceDatabase
 
 app = Flask(__name__)
 faceOps = FaceOperations(**options.get('face', {}))
