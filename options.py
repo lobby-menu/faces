@@ -1,7 +1,8 @@
 imgDim = 96
 options = {
     'database': {
-        'connection_string': 'mongodb://172.17.0.1:27017'
+        'connection_string': 'mongodb://172.17.0.1:27017',
+        'database': 'lobbyface'
     },
     'storage': {
         'path': 'uploads',

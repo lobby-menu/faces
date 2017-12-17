@@ -1,6 +1,6 @@
 import os
 from options import options
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from operations import FaceOperations
 from database import FaceDatabase
 from storage import FaceStorage
@@ -65,6 +65,7 @@ def faces_create():
         face_meta = storage.write_face_image(rgbToPNGBytes(alignedFace))
         original_meta['faces'].append(face_meta)
         # TODO: save reps and face_meta
+        print(database.insert_face_with_represehtation(list(reps), face_meta))
 
     return jsonify(original_meta)
 
