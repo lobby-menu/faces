@@ -106,8 +106,9 @@ def faces_identify_route():
     if data is None or 'faces' not in data:
         raise InvalidUsage("This endpoint requires data in json format to be posted. With faces key.")
     faces = data.get('faces', [])
+    grouping = data.get('grouping', True)
 
-    return jsonify(faces_identify(database, faceOps, faces))
+    return jsonify(faces_identify(database, faceOps, faces, grouping != False))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
