@@ -4,6 +4,7 @@ def faces_identify(database, faceOps, face_ids, grouping=True):
     groups = faceOps.group(map(lambda face: face['reps'], faces)) if grouping else [0] * len(faces)
     groupScores = list(map(lambda _: { 'faces': [], 'scores': {} }, range(0, max(groups) + 1)))
 
+    # For each group, add faces to them
     for idx, group in enumerate(groups):
         face = faces[idx]
         groupScore = groupScores[group]
@@ -11,6 +12,7 @@ def faces_identify(database, faceOps, face_ids, grouping=True):
         groupScore['faces'].append(str(face['_id']))
 
 
+    # Calculate similarity scores for each person's face and our grouped faces.
     for faceToCompare in database.get_labeled_face_representations(face_ids):
         person = str(faceToCompare['person'])
 
@@ -26,6 +28,7 @@ def faces_identify(database, faceOps, face_ids, grouping=True):
             personScore['average'] += compareResult
             personScore['count'] += 1
 
+    # group and sort scores per person per group.
     for groupScore in groupScores:
         scores = []
 

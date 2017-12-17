@@ -51,7 +51,7 @@ class FaceOperations:
             return list(map(map_rectangle_to_tuple, self.__align.getAllFaceBoundingBoxes(image)))
         else:
             bb = map_rectangle_to_tuple(self.__align.getLargestFaceBoundingBox(image))
-            return None if bb is None else [bb]
+            return None if bb is None else list(filter(lambda x: x is not None, [bb]))
 
     def align(self, image, imgDim=96, landmarkIndices=openface.AlignDlib.OUTER_EYES_AND_NOSE):
         return self.__align.align(

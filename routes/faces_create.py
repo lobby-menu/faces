@@ -4,13 +4,19 @@ def faces_create(storage, faceOps, database, temp_path):
     # TODO: remove copy if not necessary.
     original_meta = storage.upload_original_image(temp_path, True)
     originalImageRGB = readRGBImage(temp_path)
+    if originalImageRGB is None:
+        return None
     original_database_id = database.insert_original_with_faces(original_meta)
 
     faces = faceOps.find_faces(originalImageRGB)
+    if faces is None or len(faces) == 0:
+        return None
     faceIds, faceResults = [], []
     for rect in faces:
         faceImage = snapRectangle(originalImageRGB, rect)
         alignedFace = faceOps.align(faceImage)
+        if alignedFace is None:
+            continue
         reps = faceOps.extract(alignedFace)
 
         # Write the image to disk, get the metadata for accessing it later.
