@@ -49,8 +49,20 @@ class FaceDatabase:
             'creation_date': datetime.utcnow()
         }).inserted_id
 
-    def get_face_representation(self, id):
-        return self.faces.find_one({ "_id": ObjectId(id) })
+
+    def get_face_representations(self, face_ids):
+        ids = convertToIdArray(face_ids)
+        return self.faces.find({ '_id': { '$in': ids }}, { '_id': 1, 'reps': 1 })
+
+    def get_labeled_face_representations(self, excludeIds=[]):
+        ids = convertToIdArray(excludeIds)
+        return self.faces.find(
+            {
+                'person': { '$exists': True, '$not': { '$size': 0 }},
+                '_id': { '$not': { '$in': ids }}
+            },
+            { '_id': 0, 'person': 1, 'reps': 1 }
+        )
 
     def get_face_metadata(self, id):
         """
