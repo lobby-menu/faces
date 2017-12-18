@@ -1,6 +1,7 @@
 import os
 from options import options
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from operations import FaceOperations
 from database import FaceDatabase
 from storage import FaceStorage
@@ -28,6 +29,7 @@ class InvalidUsage(Exception):
         return rv
 
 app = Flask(__name__, static_url_path='/')
+CORS(app)
 
 @app.route('/uploads/<path:path>')
 def send_files(path):
