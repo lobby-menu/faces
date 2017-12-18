@@ -7,7 +7,7 @@ def mapFaceResultToObj(storage, id, meta):
     return {
         'id': id,
         'accessible_url': accessible_url,
-        'creation_data': creation_date,
+        'creation_date': creation_date,
         'original': str(original),
         'extra': extra
     }
