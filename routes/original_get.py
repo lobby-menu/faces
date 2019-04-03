@@ -1,5 +1,6 @@
 from faces_get import mapFaceResultToObj
 
+
 def original_get(storage, database, id):
     result = database.get_original(id)
     id = result.get('_id', '')

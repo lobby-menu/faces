@@ -1,5 +1,6 @@
 from image_utils import readRGBImage, snapRectangle, rgbToPNGBytes
 
+
 def faces_create(storage, faceOps, database, temp_path):
     # TODO: remove copy if not necessary.
     original_meta = storage.upload_original_image(temp_path, True)

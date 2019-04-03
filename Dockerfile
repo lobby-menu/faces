@@ -13,7 +13,7 @@ ADD requirements.txt .
 USER root
 RUN pip install --ignore-installed -r /home/lobby/app/requirements.txt
 
-USER lobby
+USER root
 
 # Create a working directory and add all files to it.
 ADD . .
