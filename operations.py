@@ -3,17 +3,20 @@
 # also group
 from sklearn import cluster
 import os
-import cv2
 import scipy
 import openface
+
 
 def map_rectangle_to_tuple(rect):
     if rect is None:
         return None
-    return ((rect.left(), rect.top()), (rect.width(), rect.height()))
+    return (rect.left(), rect.top()), (rect.width(), rect.height())
+
 
 class FaceOperations:
     def __init__(self, **options):
+        self.__align = None
+        self.net = None
         models_path = options.get('model_directory', '/')
         align_options = options.get('align', {})
         dlib_model_path = os.path.join(
@@ -25,7 +28,6 @@ class FaceOperations:
         )
         self.init_align(dlib_model_path, align_options.get('options', {}))
 
-
         feature_options = options.get('feature', {})
         of_model_path = os.path.join(
             models_path,
@@ -36,7 +38,7 @@ class FaceOperations:
         )
         self.init_feature(of_model_path, feature_options.get('options', {}))
 
-        self.cluster_options = options.get('cluster', { 'threshold': 0.35, 'n_clusters': None })
+        self.cluster_options = options.get('cluster', {'threshold': 0.35, 'n_clusters': None})
 
     def init_align(self, align_model_path, options):
         self.__align = openface.AlignDlib(align_model_path, **options)
@@ -53,11 +55,11 @@ class FaceOperations:
             bb = map_rectangle_to_tuple(self.__align.getLargestFaceBoundingBox(image))
             return None if bb is None else list(filter(lambda x: x is not None, [bb]))
 
-    def align(self, image, imgDim=96, landmarkIndices=openface.AlignDlib.OUTER_EYES_AND_NOSE):
+    def align(self, image, img_dim=96, landmark_indices=openface.AlignDlib.OUTER_EYES_AND_NOSE):
         return self.__align.align(
-            imgDim,
+            img_dim,
             image,
-            landmarkIndices = landmarkIndices
+            landmark_indices=landmark_indices
         )
 
     # Extracts 128d vector of the given face. Having the property of, when comparing two faces, you will have

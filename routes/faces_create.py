@@ -1,43 +1,43 @@
-from image_utils import readRGBImage, snapRectangle, rgbToPNGBytes
+from image_utils import read_rgb_image, snap_rectangle, rgb_to_png_bytes
 
 
-def faces_create(storage, faceOps, database, temp_path):
+def faces_create(storage, face_ops, database, temp_path):
     # TODO: remove copy if not necessary.
     original_meta = storage.upload_original_image(temp_path, True)
-    originalImageRGB = readRGBImage(temp_path)
-    if originalImageRGB is None:
+    original_image_rgb = read_rgb_image(temp_path)
+    if original_image_rgb is None:
         return None
     original_database_id = database.insert_original_with_faces(original_meta)
 
-    faces = faceOps.find_faces(originalImageRGB)
+    faces = face_ops.find_faces(original_image_rgb)
     if faces is None or len(faces) == 0:
         return None
-    faceIds, faceResults = [], []
+    face_ids, face_results = [], []
     for rect in faces:
-        faceImage = snapRectangle(originalImageRGB, rect)
-        alignedFace = faceOps.align(faceImage)
-        if alignedFace is None:
+        face_image = snap_rectangle(original_image_rgb, rect)
+        aligned_face = face_ops.align(face_image)
+        if aligned_face is None:
             continue
-        reps = faceOps.extract(alignedFace)
+        reps = face_ops.extract(aligned_face)
 
         # Write the image to disk, get the metadata for accessing it later.
-        face_meta = storage.write_face_image(rgbToPNGBytes(alignedFace))
+        face_meta = storage.write_face_image(rgb_to_png_bytes(aligned_face))
         # Insert face representation and metadata into database.
         # TODO: maybe send some extra data to database aswell?
         database_id = database.insert_face_with_representation(list(reps), face_meta, original_database_id)
 
         left, top = rect[0]
         width, height = rect[1]
-        faceIds.append(database_id)
-        faceResults.append({
+        face_ids.append(database_id)
+        face_results.append({
             'id': str(database_id),
-            'accessible_url': storage.get_user_acessible_url_for_image(face_meta),
-            'position': { 'left': left, 'top': top, 'width': width, 'height': height }
+            'accessible_url': storage.get_user_accessible_url_for_image(face_meta),
+            'position': {'left': left, 'top': top, 'width': width, 'height': height}
         })
 
-    database.set_faces_for_original(original_database_id, faceIds)
+    database.set_faces_for_original(original_database_id, face_ids)
     return {
         'id': str(original_database_id),
-        'accessible_url': storage.get_user_acessible_url_for_image(original_meta),
-        'faces': faceResults
+        'accessible_url': storage.get_user_accessible_url_for_image(original_meta),
+        'faces': face_results
     }

@@ -1,11 +1,12 @@
-from faces_get import mapFaceResultToObj
+from faces_get import map_face_result_to_obj
 
-def person_get(storage, database, id):
-    result = database.get_person(id)
-    id = result.get('_id', '')
+
+def person_get(storage, database, person_id):
+    result = database.get_person(person_id)
+    person_id = result.get('_id', '')
     faces = database.get_faces(result.get('faces', []))
 
     return {
-        'id': str(id),
-        'faces': list(map(lambda faceMeta: mapFaceResultToObj(storage, str(faceMeta['_id']), faceMeta), faces))
+        'id': str(person_id),
+        'faces': list(map(lambda face_meta: map_face_result_to_obj(storage, str(face_meta['_id']), face_meta), faces))
     }

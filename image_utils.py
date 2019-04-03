@@ -1,20 +1,23 @@
 import cv2
 
-def readRGBImage(imgPath):
+
+def read_rgb_image(img_path):
     """
     Reads RGB image from the given part.
-    :param imgPath:
+    :param img_path:
     :return:
     """
-    bgrImg = cv2.imread(imgPath)
-    return None if bgrImg is None else cv2.cvtColor(bgrImg, cv2.COLOR_BGR2RGB)
+    bgr_img = cv2.imread(img_path)
+    return None if bgr_img is None else cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
 
-def rgbToPNGBytes(rgbImage):
-    image = cv2.cvtColor(rgbImage, cv2.COLOR_RGB2BGR)
+
+def rgb_to_png_bytes(rgb_image):
+    image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
     result, buf = cv2.imencode(".png", image)
     return bytearray(buf)
 
-def snapRectangle(img, rect):
+
+def snap_rectangle(img, rect):
     """
     Given a image and a rectangle, returns only the rectangle part of that image.
 
@@ -22,8 +25,8 @@ def snapRectangle(img, rect):
     :param rect: the rectangle in the ((left, top), (width, height)) format.
     :return: the snapped and copied rectangle from the image.
     """
-    imgHeight, imgWidth, _ = img.shape
+    img_height, img_width, _ = img.shape
     left, top = rect[0]
     width, height = rect[1]
     # TODO: Copy maybe unnecessary?
-    return img[max(0, top):min(imgHeight, top+height), max(0, left):min(imgWidth, left+width)].copy()
+    return img[max(0, top):min(img_height, top+height), max(0, left):min(img_width, left+width)].copy()

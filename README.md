@@ -1,5 +1,5 @@
 # Faces
-Faces is the face recognition part of the Lobby Backend project. It's aim is to create a dynamic database of customers that frequent the restaurant. Making it possible to id the customers nothing but their faces.
+Faces is the face recognition part of the Lobby project. It's aim is to create a dynamic database of customers that frequent the restaurant. Making it possible to id the customers nothing but their faces.
 
 It accepts a photo of a customer, and returns the possible matches with a percentage score of the match. Then you can either let the service automatically create a relation with the face you sent and some result in the database, or you can make it so you will have to manually mark the relationship between faces with a second REST api call.
 
@@ -7,6 +7,12 @@ It accepts a photo of a customer, and returns the possible matches with a percen
 The aim is to create a database of faces and a somewhat correct clustering of these faces. Face ids and clustering(person) ids will be unique identifiers that will be used to associate metadata with a single person.
 
 This clustering of faces maybe reversible, in case we find a better algorithm.
+
+## Environment Variables
+- *FACE_DATABASE_CONNECTION_STRING* connection string to the face mongo database
+- *FACE_DATABASE_NAME* database collection name to use
+- *STORAGE_PATH* storage path to store the original and face images
+- *STORAGE_BASE_URL* base url to use when returning the image urls
 
 ## REST API Methods
 Below are the methods which can be accessed via HTTP.
