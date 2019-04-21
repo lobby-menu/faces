@@ -39,6 +39,7 @@ def send_files(path):
     return app.send_static_file(os.path.join('uploads', path))
 
 
+server_options = options.get('server', {})
 face_ops = FaceOperations(**options.get('face', {}))
 database = FaceDatabase(**options.get('database', {}))
 storage = FaceStorage(**options.get('storage', {}))
@@ -127,4 +128,4 @@ def faces_identify_route():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(**server_options)

@@ -59,7 +59,7 @@ class FaceOperations:
         return self.__align.align(
             img_dim,
             image,
-            landmark_indices=landmark_indices
+            landmarkIndices=landmark_indices
         )
 
     # Extracts 128d vector of the given face. Having the property of, when comparing two faces, you will have

@@ -24,5 +24,9 @@ options = {
                 'cuda': False
             }
         }
-    }
+    },
+    'server': {
+        'host': getenv('HOST', '0.0.0.0'),
+        'port': int(getenv('PORT', '8080'))
+    },
 }
